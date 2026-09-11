@@ -4,8 +4,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-FILE = PROJECT_ROOT / "finetune" / "video_split.py"
+FILE = Path(__file__).resolve().parents[1] / "finetune" / "video_split.py"
 SPEC = importlib.util.spec_from_file_location("video_split", FILE)
 video_split = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(video_split)
@@ -77,9 +76,9 @@ def test_006():
 
 
 def test_007():
-    # 测试用例007：缺少问题编号时应拒绝生成输出文件
+    # 测试用例007：缺少问题编号时应在打开视频前报错
     row = {"video_name": "demo", "start-time/s": "1"}
-    clip = fake_clip()
-    with patch.object(video_split, "VideoFileClip", return_value=clip):
+    with patch.object(video_split, "VideoFileClip") as video_file_clip:
         with pytest.raises(KeyError):
             video_split.data_process(row, "videos")
+    video_file_clip.assert_not_called()
