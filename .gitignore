@@ -1,0 +1,52 @@
+# Operating system and editors
+.DS_Store
+.idea/
+.vscode/
+
+# Python bytecode and tool caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Virtual environments
+.venv/
+.venv-*/
+venv/
+env/
+
+# Packaging artifacts
+build/
+dist/
+*.egg-info/
+
+# Local configuration and logs
+.env
+.env.*
+!.env.example
+*.log
+
+# Training and experiment outputs
+checkpoints/
+work_dirs/
+wandb/
+runs/
+
+# Large local model and generated video files; keep repository placeholders
+finetune/models/*
+!finetune/models/download_models_here
+finetune/models_ft/*
+!finetune/models_ft/save_finetuned_models_here
+finetune/video_clip/*
+!finetune/video_clip/split_video_here
+
+# Common model weight formats
+*.ckpt
+*.pt
+*.pth
+*.safetensors
