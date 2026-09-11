@@ -30,6 +30,15 @@ A random half of the ground-truth answers in the test set are withheld by us, pl
 python eval.py --pred_path example_pred.jsonl --test_path test_half_release.csv
 ```
 The evaluation may take about 18 minutes, and the results will be saved to metrics_xxx.json and results_xxx.json.
+
+## Test
+The Module 1 automated tests are located in `test_module1/`. From the repository root, install the test dependencies once and run all 33 test cases with the following commands:
+
+```bash
+python -m pip install pytest pandas moviepy tqdm requests
+python -m pytest -q test_module1
+```
+
 ## Benchmarking
 | Methods              | LLM                | Res.     | #F      | Tool Use   | Information | Navigation | Safety    | Communication | Resource  | Overall   |
 |----------------------|--------------------|----------|---------|------------|-------------|------------|-----------|----------------|-----------|-----------|
