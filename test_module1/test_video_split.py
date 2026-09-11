@@ -4,7 +4,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-FILE = Path(__file__).parent / "finetune" / "video_split.py"
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+FILE = PROJECT_ROOT / "finetune" / "video_split.py"
 SPEC = importlib.util.spec_from_file_location("video_split", FILE)
 video_split = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(video_split)

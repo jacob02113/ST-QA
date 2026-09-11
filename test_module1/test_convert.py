@@ -3,7 +3,8 @@ import importlib.util
 import json
 from pathlib import Path
 
-FILE = Path(__file__).parent / "finetune" / "convert.py"
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+FILE = PROJECT_ROOT / "finetune" / "convert.py"
 SPEC = importlib.util.spec_from_file_location("convert", FILE)
 convert = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(convert)

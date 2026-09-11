@@ -4,7 +4,8 @@ from pathlib import Path
 
 import pandas as pd
 
-FILE = Path(__file__).parent / "eval.py"
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+FILE = PROJECT_ROOT / "eval.py"
 SPEC = importlib.util.spec_from_file_location("eval_module", FILE)
 eval_module = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(eval_module)
