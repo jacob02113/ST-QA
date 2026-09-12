@@ -115,6 +115,7 @@ def calculate_metrics(csv_path, json_path, output_path):
         entry = entries[0]
         pred = entry.get("pred", "").lower()
         score = float(entry.get("score", 0))
+        assert score >= 0 and score <= 5, f"Score {score} is out of range for question ID: {q_id}"
 
         stats[type_]["total"] += 1
         if pred == "yes":
