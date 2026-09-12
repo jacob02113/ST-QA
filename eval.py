@@ -154,7 +154,7 @@ def main():
 
     # Load prediction and test files
     with open(args.pred_path, encoding='utf-8') as f:
-        predictions = [eval(line.strip()) for line in f.readlines()]
+        predictions = [json.loads(line.strip()) for line in f.readlines()]
 
     test_df = pd.read_csv(args.test_path)
     test_data = test_df.set_index('question_id').to_dict(orient='index')
