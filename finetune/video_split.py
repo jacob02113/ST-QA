@@ -5,6 +5,10 @@ from moviepy.video.io.VideoFileClip import VideoFileClip
 import argparse
 
 def data_process(row, video_dir):
+    required_fields = ("video_name", "start-time/s", "question_id")
+    for field in required_fields:
+        if not row.get(field):
+            raise KeyError(field)
 
     video_name = Path(video_dir) / f"{row['video_name']}.mp4"
     start_time = max(float(row['start-time/s']), 0.1) # Ensure start time is at least 0.1 seconds to avoid errors
