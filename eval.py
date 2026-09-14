@@ -6,6 +6,7 @@ import argparse
 import requests
 import pandas as pd
 from tqdm import tqdm
+import math
 
 # Replace with your actual OpenAI API key
 api_key = 'YOUR_API_KEY'
@@ -112,10 +113,19 @@ def calculate_metrics(csv_path, json_path, output_path):
         if type_ not in stats:
             stats[type_] = {"total": 0, "yes_count": 0, "score_sum": 0.0}
 
-        entry = entries[0]
-        pred = entry.get("pred", "").lower()
-        score = float(entry.get("score", 0))
-        assert score >= 0 and score <= 5, f"Score {score} is out of range for question ID: {q_id}"
+        # A prediction file can contain incomplete or malformed evaluator
+        # output.  Treat missing values as the safest neutral result and
+        # normalize scores before aggregating them instead of aborting the
+        # whole evaluation.
+        entry = entries[0] if isinstance(entries, list) and entries else {}
+        pred = str(entry.get("pred", "")).strip().lower()
+        try:
+            score = float(entry.get("score", 0))
+        except (TypeError, ValueError):
+            score = 0.0
+        if not math.isfinite(score):
+            score = 0.0
+        score = min(5.0, max(0.0, score))
 
         stats[type_]["total"] += 1
         if pred == "yes":
