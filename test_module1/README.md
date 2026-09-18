@@ -7,27 +7,27 @@
 - Python 3.9 或更高版本
 - pip
 
-## 安装测试环境
+## 统一测试环境
 
-以下命令均在仓库根目录执行：
+模块一和模块二共用根目录的 `requirements-test.txt` 和 `.venv-test`。以下命令均在仓库根目录执行：
 
 ```bash
-python3 -m venv .venv-module1
-source .venv-module1/bin/activate
+python3 -m venv .venv-test
+source .venv-test/bin/activate
 python -m pip install --upgrade pip
-python -m pip install -r test_module1/requirements.txt
+python -m pip install -r requirements-test.txt
 ```
 
 Windows PowerShell 使用以下命令激活虚拟环境：
 
 ```powershell
-.venv-module1\Scripts\Activate.ps1
+.venv-test\Scripts\Activate.ps1
 ```
 
-## 运行全部测试
+## 运行模块一和模块二
 
 ```bash
-python -m pytest test_module1 -v
+python -m pytest test_module1 test_module2 -v
 ```
 
 ## 运行单个测试文件
@@ -36,6 +36,12 @@ python -m pytest test_module1 -v
 python -m pytest test_module1/test_video_split.py -v
 python -m pytest test_module1/test_convert.py -v
 python -m pytest test_module1/test_eval.py -v
+```
+
+只运行模块一：
+
+```bash
+python -m pytest test_module1 -v
 ```
 ## 测试说明
 

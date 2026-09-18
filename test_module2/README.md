@@ -2,33 +2,34 @@
 
 本目录包含 20 条由 AI 辅助设计并经人工审核的自动化测试，重点验证评估结果解析、异常评分处理和跨轮次缓存隔离。测试全部使用临时文件与 Mock，不会调用真实评分接口。
 
-## 环境配置
+## 统一测试环境
 
-在仓库根目录执行：
+模块一和模块二共用根目录的 `requirements-test.txt` 和 `.venv-test`。在仓库根目录执行：
 
 ```bash
-python3 -m venv .venv-module2
-source .venv-module2/bin/activate
-python -m pip install -r test_module2_ai/requirements.txt
+python3 -m venv .venv-test
+source .venv-test/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements-test.txt
 ```
 
 Windows PowerShell 使用：
 
 ```powershell
-.venv-module2\Scripts\Activate.ps1
-python -m pip install -r test_module2_ai/requirements.txt
+.venv-test\Scripts\Activate.ps1
+python -m pip install -r requirements-test.txt
 ```
 
 ## 一键运行
 
 ```bash
-python -m pytest test_module1 test_module2_ai -v
+python -m pytest test_module1 test_module2 -v
 ```
 
 只运行模块二：
 
 ```bash
-python -m pytest test_module2_ai -v
+python -m pytest test_module2 -v
 ```
 
 ## 测试范围
