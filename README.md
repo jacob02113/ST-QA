@@ -66,3 +66,26 @@ The evaluation may take about 18 minutes, and the results will be saved to metri
 
 ## Notes
 The dataset is strictly for research purpose. Please always attach the source links of the videos for distribution if available.
+
+## Module 2 AI-assisted testing
+
+Module 2 adds 20 AI-assisted robustness tests for the evaluation pipeline. The tests cover safe JSONL parsing, malformed scores, question ID normalization, cache invalidation, stale-result isolation, and mocked API responses.
+
+Create an isolated environment and run all module tests from the repository root:
+
+```bash
+python3 -m venv .venv-module2
+source .venv-module2/bin/activate
+python -m pip install -r test_module2_ai/requirements.txt
+python -m pytest test_module1 test_module2_ai -v
+```
+
+Windows PowerShell activation:
+
+```powershell
+.venv-module2\Scripts\Activate.ps1
+python -m pip install -r test_module2_ai/requirements.txt
+python -m pytest test_module1 test_module2_ai -v
+```
+
+The test suite uses temporary files and mocks. It does not call the external scoring API.
