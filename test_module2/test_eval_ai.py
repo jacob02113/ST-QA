@@ -15,11 +15,13 @@ SPEC.loader.exec_module(eval_module)
 
 
 def write_metric_inputs(tmp_path, results, question_ids=None, types=None, nested=False):
+    """Write a CSV + results fixture and return the generated metrics payload."""
     question_ids = question_ids or ["q1", "q2"]
     types = types or ["scene", "action"]
     csv_path = tmp_path / "test.csv"
     json_path = tmp_path / "results.json"
     output_path = tmp_path / "nested" / "metrics.json" if nested else tmp_path / "metrics.json"
+
     pd.DataFrame({"question_id": question_ids, "type": types}).to_csv(csv_path, index=False)
     json_path.write_text(json.dumps(results), encoding="utf-8")
     eval_module.calculate_metrics(csv_path, json_path, output_path)
@@ -27,6 +29,7 @@ def write_metric_inputs(tmp_path, results, question_ids=None, types=None, nested
 
 
 def qa(pred="answer"):
+    """Return a representative QA object used across cache and scoring tests."""
     return {
         "q": "What is ahead?",
         "a0": "a door",
@@ -36,6 +39,13 @@ def qa(pred="answer"):
         "type": "navigation",
         "pred": pred,
     }
+
+
+def write_cache_result(tmp_path, question_id, payload):
+    """Persist a synthetic cached result using the production filename convention."""
+    result_path = tmp_path / eval_module.result_filename(question_id)
+    result_path.write_text(json.dumps(payload), encoding="utf-8")
+    return result_path
 
 
 def test_ai_201_loads_valid_jsonl(tmp_path):
@@ -131,24 +141,23 @@ def test_ai_216_generates_path_safe_cache_filename():
 
 def test_ai_217_accepts_cache_for_identical_input(tmp_path):
     current = qa()
-    result_path = tmp_path / eval_module.result_filename("q1")
-    result_path.write_text(json.dumps([{"pred": "yes", "score": 5}, current]), encoding="utf-8")
+    result_path = write_cache_result(tmp_path, "q1", [{"pred": "yes", "score": 5}, current])
     assert eval_module.cache_matches(result_path, current)
 
 
 def test_ai_218_invalidates_cache_when_prediction_changes(tmp_path):
-    result_path = tmp_path / eval_module.result_filename("q1")
-    result_path.write_text(json.dumps([{"pred": "yes", "score": 5}, qa("old")]), encoding="utf-8")
+    result_path = write_cache_result(tmp_path, "q1", [{"pred": "yes", "score": 5}, qa("old")])
     assert not eval_module.cache_matches(result_path, qa("new"))
 
 
 def test_ai_219_collects_only_current_run_results(tmp_path):
     current = {"q.1": qa()}
-    expected_path = tmp_path / eval_module.result_filename("q.1")
-    expected_path.write_text(json.dumps([{"pred": "yes", "score": 5}, current["q.1"]]), encoding="utf-8")
+    expected_path = write_cache_result(tmp_path, "q.1", [{"pred": "yes", "score": 5}, current["q.1"]])
     (tmp_path / "stale.json").write_text(json.dumps([{"pred": "yes", "score": 5}, qa("stale")]), encoding="utf-8")
     combined = eval_module.collect_results(tmp_path, current)
     assert list(combined) == ["q.1"]
+    assert list(combined["q.1"]) == [{"pred": "yes", "score": 5}, current["q.1"]]
+    assert expected_path.exists()
 
 
 def test_ai_220_scores_with_timeout_and_normalizes_response(tmp_path):
