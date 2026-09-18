@@ -67,11 +67,25 @@ The evaluation may take about 18 minutes, and the results will be saved to metri
 ## Notes
 The dataset is strictly for research purpose. Please always attach the source links of the videos for distribution if available.
 
-## Module 1 and 2 testing
+## Module Testing
 
-Module 1 and Module 2 share one test environment. Module 2 adds 20 AI-assisted robustness tests for the evaluation pipeline, covering safe JSONL parsing, malformed scores, question ID normalization, cache invalidation, stale-result isolation, and mocked API responses.
+### Shared Test Environment
 
-Create an isolated environment and run all module tests from the repository root:
+Modules 1 and 2 use the same test environment and dependency set. This reduces setup overhead and ensures consistent behavior across the evaluation pipeline.
+
+### Module 2 Additional Coverage
+
+Module 2 adds 20 AI-assisted regression tests that focus on the robustness of the evaluation workflow, including:
+
+- safe JSONL parsing and schema validation
+- malformed or out-of-range score handling
+- question ID normalization and type filtering
+- cache invalidation and stale-result isolation
+- mocked API responses and timeout handling
+
+### Run the Tests
+
+From the repository root, create an isolated environment and execute the full module test suite:
 
 ```bash
 python3 -m venv .venv-test
@@ -81,7 +95,7 @@ python -m pip install -r requirements-test.txt
 python -m pytest test_module1 test_module2 -v
 ```
 
-Windows PowerShell activation:
+For Windows PowerShell:
 
 ```powershell
 .venv-test\Scripts\Activate.ps1
@@ -89,4 +103,4 @@ python -m pip install -r requirements-test.txt
 python -m pytest test_module1 test_module2 -v
 ```
 
-The test suite uses temporary files and mocks. It does not call the external scoring API.
+The test suite uses temporary files and mocked services, and does not call the external scoring API.
