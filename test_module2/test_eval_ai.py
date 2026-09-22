@@ -16,8 +16,10 @@ SPEC.loader.exec_module(eval_module)
 
 def write_metric_inputs(tmp_path, results, question_ids=None, types=None, nested=False):
     """Write a CSV + results fixture and return the generated metrics payload."""
-    question_ids = question_ids or ["q1", "q2"]
-    types = types or ["scene", "action"]
+    if question_ids is None:
+        question_ids = ["q1", "q2"]
+    if types is None:
+        types = ["scene", "action"]
     csv_path = tmp_path / "test.csv"
     json_path = tmp_path / "results.json"
     output_path = tmp_path / "nested" / "metrics.json" if nested else tmp_path / "metrics.json"
